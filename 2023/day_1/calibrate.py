@@ -1033,9 +1033,6 @@ def extract_digits(s):
         digits += [(p, literal) for p in map_positions(s, spelled)]
         digits += [(p, literal) for p in map_positions(s, literal)]
 
-    if not digits:
-        return s
-
     # sort digits by their position
     digits.sort(key=lambda tup: tup[0])
     digits = [tup[1] for tup in digits]
