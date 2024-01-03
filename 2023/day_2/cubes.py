@@ -1,5 +1,4 @@
-input = '''
-Game 1: 1 red, 10 blue, 5 green; 11 blue, 6 green; 6 green; 1 green, 1 red, 12 blue; 3 blue; 3 blue, 4 green, 1 red
+input = '''Game 1: 1 red, 10 blue, 5 green; 11 blue, 6 green; 6 green; 1 green, 1 red, 12 blue; 3 blue; 3 blue, 4 green, 1 red
 Game 2: 3 red, 5 green; 5 green, 7 red; 1 blue, 7 red, 3 green; 3 red, 2 blue; 5 green, 4 red
 Game 3: 4 blue, 4 green; 2 green, 2 blue; 8 green, 2 red, 3 blue
 Game 4: 3 blue, 15 green; 16 green; 2 red, 7 green; 2 blue, 14 green
@@ -101,7 +100,7 @@ Game 99: 1 red, 2 green; 2 red, 2 blue, 1 green; 3 green, 1 blue, 6 red; 3 red, 
 Game 100: 9 green, 2 blue, 12 red; 2 blue, 14 red, 2 green; 14 red, 12 green
 '''
 
-def cubes_per_game(game):
+def max_color_counts(game):
     r, g, b = 0, 0, 0
     sets = game.split(': ')[1].split('; ')
     for s in sets:
@@ -109,10 +108,24 @@ def cubes_per_game(game):
         for c in colors:
             c = c.split()
             if c[1] == 'red':
-                r += int(c[0])
+                r = max(r, int(c[0]))
             if c[1] == 'green':
-                g += int(c[0])
+                g = max(g, int(c[0]))
             if c[1] == 'blue':
-                b += int(c[0])
+                b = max(b, int(c[0]))
 
     return r, g, b
+
+def is_possible(game):
+    r, g, b = max_color_counts(game)
+    print(r, g, b)
+    return r <= 12 and g <= 13 and b <= 14
+
+def sum_possible_games():
+    total = 0
+    for i, game in enumerate(input.splitlines()):
+        ok = is_possible(game)
+        print(i + 1, 'yes' if ok else 'no')
+        if ok:
+            total += (i + 1)
+    return total
