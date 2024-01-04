@@ -115,7 +115,6 @@ def max_color_counts(game):
                 g = max(g, int(c[0]))
             if c[1] == 'blue':
                 b = max(b, int(c[0]))
-
     return r, g, b
 
 def is_possible(game):
@@ -125,8 +124,7 @@ def is_possible(game):
 def sum_possible_games(games):
     total = 0
     for i, game in enumerate(games):
-        ok = is_possible(game)
-        if ok:
+        if is_possible(game):
             total += (i + 1)
     return total
 
