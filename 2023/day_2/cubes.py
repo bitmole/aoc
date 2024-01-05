@@ -106,7 +106,7 @@ Game 100: 9 green, 2 blue, 12 red; 2 blue, 14 red, 2 green; 14 red, 12 green
 
 def max_color_counts(game):
     r, g, b = 0, 0, 0
-    color_counts = re.findall(r'(\d+\s)(red|green|blue)', game)
+    color_counts = re.findall(r'(\d+)\s(red|green|blue)', game)
     for count, color in color_counts:
         if color == 'red':
             r = max(r, int(count))
