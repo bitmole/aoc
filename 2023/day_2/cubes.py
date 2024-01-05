@@ -1,5 +1,7 @@
 # https://adventofcode.com/2023/day/2
 
+import re
+
 input = '''Game 1: 1 red, 10 blue, 5 green; 11 blue, 6 green; 6 green; 1 green, 1 red, 12 blue; 3 blue; 3 blue, 4 green, 1 red
 Game 2: 3 red, 5 green; 5 green, 7 red; 1 blue, 7 red, 3 green; 3 red, 2 blue; 5 green, 4 red
 Game 3: 4 blue, 4 green; 2 green, 2 blue; 8 green, 2 red, 3 blue
@@ -104,17 +106,14 @@ Game 100: 9 green, 2 blue, 12 red; 2 blue, 14 red, 2 green; 14 red, 12 green
 
 def max_color_counts(game):
     r, g, b = 0, 0, 0
-    sets = game.split(': ')[1].split('; ')
-    for s in sets:
-        colors = s.split(', ')
-        for c in colors:
-            c = c.split()
-            if c[1] == 'red':
-                r = max(r, int(c[0]))
-            if c[1] == 'green':
-                g = max(g, int(c[0]))
-            if c[1] == 'blue':
-                b = max(b, int(c[0]))
+    color_counts = re.findall(r'(\d+\s)(red|green|blue)', game)
+    for count, color in color_counts:
+        if color == 'red':
+            r = max(r, int(count))
+        elif color == 'green':
+            g = max(g, int(count))
+        elif color == 'blue':
+            b = max(b, int(count))
     return r, g, b
 
 def is_possible(game):
