@@ -1,6 +1,7 @@
 # https://adventofcode.com/2023/day/2
 
 import re
+import unittest
 
 input = '''Game 1: 1 red, 10 blue, 5 green; 11 blue, 6 green; 6 green; 1 green, 1 red, 12 blue; 3 blue; 3 blue, 4 green, 1 red
 Game 2: 3 red, 5 green; 5 green, 7 red; 1 blue, 7 red, 3 green; 3 red, 2 blue; 5 green, 4 red
@@ -105,16 +106,11 @@ Game 100: 9 green, 2 blue, 12 red; 2 blue, 14 red, 2 green; 14 red, 12 green
 '''
 
 def max_color_counts(game):
-    r, g, b = 0, 0, 0
-    color_counts = re.findall(r'(\d+)\s(red|green|blue)', game)
-    for count, color in color_counts:
-        if color == 'red':
-            r = max(r, int(count))
-        elif color == 'green':
-            g = max(g, int(count))
-        elif color == 'blue':
-            b = max(b, int(count))
-    return r, g, b
+    cubes = re.findall(r'(\d+)\s(red|green|blue)', game)
+    r = max(int(count) for count, color in cubes if color=='red')
+    g = max(int(count) for count, color in cubes if color=='green')
+    b = max(int(count) for count, color in cubes if color=='blue')
+    return r,g,b
 
 def is_possible(game):
     r, g, b = max_color_counts(game)
@@ -134,28 +130,20 @@ def sum_cube_powers(games):
         total += r * g * b
     return total
 
-
-def test_cube_powers():
+class KnownValues(unittest.TestCase):
     test_input = '''Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
-Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
-Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
-Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
-Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green'''
-    assert sum_cube_powers(test_input.splitlines()) == 2286
-    print('sum powers: okay')
+        Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
+        Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
+        Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
+        Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green'''
+    games = test_input.splitlines()
+        
 
-def test_possible_games():
-    test_input = '''Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
-Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
-Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
-Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
-Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green'''
-    assert sum_possible_games(test_input.splitlines()) == 8
-    print('sum possible: okay')
+    def test_cube_powers(self):
+        self.assertEqual(sum_cube_powers(self.games), 2286) 
 
-def tests():
-    test_cube_powers()
-    test_possible_games()
+    def test_possible_games(self):
+        self.assertEqual(sum_possible_games(self.games), 8)
 
 if __name__ == "__main__":
-    tests()
+    unittest.main()
