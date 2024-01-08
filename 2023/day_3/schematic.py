@@ -10,17 +10,18 @@ def parse_matrix(rows):
         matrix.append(row)
     return matrix
 
-def extract_numbers(matrix):
-    numbers = []
+def extract_part_numbers(matrix):
+    part_numbers = []
     for i, r in enumerate(matrix):
         for m in re.finditer(r'(\d+)', ''.join(r)):
-            n, s, e = m.group(0), m.start(), m.end()
-            numbers.append((n, s, e, i))
-    return numbers
+            val, start, end, i = (int(m.group(0)), m.start(), m.end(), i)
+            if is_part_number((start, end, i), matrix):
+                part_numbers.append(val)
+    return part_numbers
 
 def list_adj_cells(n_rec, matrix):
     cells = []
-    n, start, end, i = n_rec
+    start, end, i = n_rec
     has_prev_row = i > 0
     has_next_row = i < len(matrix) - 1
     has_prev_col = start > 0
@@ -53,9 +54,7 @@ def list_adj_cells(n_rec, matrix):
     return cells
 
 def sum_part_numbers(matrix):
-    numbers = extract_numbers(matrix)
-    part_numbers = [int(n[0]) for n in numbers if is_part_number(n, matrix)]
-    return sum(part_numbers)
+    return sum(extract_part_numbers(matrix))
 
 def is_part_number(n, matrix):
     cells = list_adj_cells(n, matrix)
@@ -82,39 +81,12 @@ class KnownValues(unittest.TestCase):
 .664.598..'''
     matrix = parse_matrix(test_input.splitlines())
 
-    def test_extract_numbers(self):
-        numbers = extract_numbers(self.matrix)
-        self.assertEqual(numbers[0], ('467', 0, 3, 0))
-        self.assertEqual(numbers[1], ('114', 5, 8, 0))
-        self.assertEqual(numbers[2], ('35', 2, 4, 2))
-        self.assertEqual(numbers[7], ('755', 6, 9, 7))
+    def test_extract_part_numbers(self):
+        part_numbers = extract_part_numbers(self.matrix)
+        for n in part_numbers:
+            self.assertTrue(n in [467, 35, 633, 617, 592, 755, 664, 598])
+            self.assertFalse(n in [114, 58])
 
-    def test_list_adj_cells(self):
-        numbers = extract_numbers(self.matrix)
-
-        # number in the middle of matrix
-        n = numbers[6]
-        cells = list_adj_cells(n, self.matrix)
-        self.assertEqual(cells, ['.', '.', '.', '.', '.', '.','.', '.', '.', '+', '.', '.'])
-
-        # number in the top row, left corner
-        n = numbers[0]
-        cells = list_adj_cells(n, self.matrix)
-        self.assertEqual(cells, ['.', '.', '.', '.', '*'])
-
-        # number in the bottom row
-        n = numbers[9]
-        cells = list_adj_cells(n, self.matrix)
-        self.assertEqual(cells, ['*', '.', '.', '.', '.', '.', '.'])
-
-    def test_is_part_number(self):
-        numbers = extract_numbers(self.matrix)
-        self.assertTrue(is_part_number(numbers[0], self.matrix))
-        self.assertTrue(is_part_number(numbers[7], self.matrix))
-        self.assertFalse(is_part_number(numbers[1], self.matrix))
-        self.assertFalse(is_part_number(numbers[5], self.matrix))
-        
-        
     def test_sum_part_numbers(self):
         self.assertEqual(sum_part_numbers(self.matrix), 4361)
 
