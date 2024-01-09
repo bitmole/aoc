@@ -10,14 +10,16 @@ def parse_matrix(rows):
         matrix.append(row)
     return matrix
 
-def extract_part_numbers(matrix):
-    part_numbers = []
+def find_numbers(matrix):
+    numbers = []
     for i, r in enumerate(matrix):
         for m in re.finditer(r'(\d+)', ''.join(r)):
-            val, start, end, i = (int(m.group(0)), m.start(), m.end(), i)
-            if is_part_number((start, end, i), matrix):
-                part_numbers.append(val)
-    return part_numbers
+            numbers.append((int(m.group(0)), m.start(), m.end(), i))
+    return numbers
+
+def filter_part_numbers(matrix):
+    numbers = find_numbers(matrix)
+    return [val for (val, start, end, i) in numbers if is_part_number((start, end, i), matrix)]
 
 def list_adj_cells(n_rec, matrix):
     cells = []
@@ -54,7 +56,7 @@ def list_adj_cells(n_rec, matrix):
     return cells
 
 def sum_part_numbers(matrix):
-    return sum(extract_part_numbers(matrix))
+    return sum(filter_part_numbers(matrix))
 
 def is_part_number(n, matrix):
     cells = list_adj_cells(n, matrix)
@@ -82,7 +84,7 @@ class KnownValues(unittest.TestCase):
     matrix = parse_matrix(test_input.splitlines())
 
     def test_extract_part_numbers(self):
-        part_numbers = extract_part_numbers(self.matrix)
+        part_numbers = filter_part_numbers(self.matrix)
         for n in part_numbers:
             self.assertTrue(n in [467, 35, 633, 617, 592, 755, 664, 598])
             self.assertFalse(n in [114, 58])
