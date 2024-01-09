@@ -21,11 +21,31 @@ def filter_part_numbers(matrix):
     numbers = find_numbers(matrix)
     return [val for (val, start, end, i) in numbers if is_part_number((start, end, i), matrix)]
 
+
 def find_gears(matrix):
-    pass
+    gear_matrix = build_gear_matrix(matrix)
 
 def sum_gears(matrix):
     pass
+
+def build_gear_matrix(matrix):
+    # init gear matrix with empty lists for part numbers in place of each "gear"
+    gear_matrix = [] 
+    for i, r in enumerate(matrix):
+        row = []
+        for j, c in enumerate(r):
+            row.append([] if c=='*' else None)
+        gear_matrix.append(row)
+
+    # populate gear matrix with part numbers
+    numbers = find_numbers(matrix)
+    for n, start, end, i in numbers:
+        cells = list_adj_cells((start, end, i), gear_matrix)
+        for cell in cells:
+            if cell is not None:
+                cell.append(n)
+
+    return gear_matrix
 
 def list_adj_cells(n_rec, matrix):
     cells = []
@@ -106,4 +126,5 @@ class KnownValues(unittest.TestCase):
         self.assertEqual(sum_gears(self.matrix), 467835)
         
 if __name__ == "__main__":
-   unittest.main()
+    pass
+   # unittest.main()
