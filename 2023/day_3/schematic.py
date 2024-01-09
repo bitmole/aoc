@@ -21,6 +21,12 @@ def filter_part_numbers(matrix):
     numbers = find_numbers(matrix)
     return [val for (val, start, end, i) in numbers if is_part_number((start, end, i), matrix)]
 
+def find_gears(matrix):
+    pass
+
+def sum_gears(matrix):
+    pass
+
 def list_adj_cells(n_rec, matrix):
     cells = []
     start, end, i = n_rec
@@ -65,7 +71,7 @@ def is_part_number(n, matrix):
 def is_symbol(c):
     return (not c.isalnum() and c != '.')
 
-def main():
+def answers():
     input_lines = [l.strip() for l in open('input.txt').readlines()]
     matrix = parse_matrix(input_lines)
     print('total:', sum_part_numbers(matrix))
@@ -92,5 +98,12 @@ class KnownValues(unittest.TestCase):
     def test_sum_part_numbers(self):
         self.assertEqual(sum_part_numbers(self.matrix), 4361)
 
+    def test_find_gears(self):
+        gears = find_gears(self.matrix)
+        self.assertEqual(gears, [[467, 35], [755, 598]])
+
+    def test_sum_gears(self):
+        self.assertEqual(sum_gears(self.matrix), 467835)
+        
 if __name__ == "__main__":
    unittest.main()
