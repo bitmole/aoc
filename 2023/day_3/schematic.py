@@ -101,7 +101,9 @@ def is_symbol(c):
 def answers():
     input_lines = [l.strip() for l in open('input.txt').readlines()]
     matrix = parse_matrix(input_lines)
-    print('total:', sum_part_numbers(matrix))
+    print('part numbers sum:', sum_part_numbers(matrix))
+    print('gears sum:', sum_gears(matrix))
+    
 
 class KnownValues(unittest.TestCase):
     test_input = '''467..114..
@@ -133,5 +135,5 @@ class KnownValues(unittest.TestCase):
         self.assertEqual(sum_gears(self.matrix), 467835)
         
 if __name__ == "__main__":
-    # pass
-    unittest.main()
+    pass
+    # unittest.main()
