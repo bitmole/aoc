@@ -2,13 +2,7 @@ import unittest
 import re
 
 def parse_matrix(rows):
-    matrix = []
-    for r in rows:
-        row = []
-        for c in r:
-            row.append(c)
-        matrix.append(row)
-    return matrix
+    return [[c for c in r] for r in rows]
 
 def find_numbers(matrix):
     numbers = []
@@ -19,7 +13,7 @@ def find_numbers(matrix):
 
 def filter_part_numbers(matrix):
     numbers = find_numbers(matrix)
-    return [val for (val, start, end, i) in numbers if is_part_number((start, end, i), matrix)]
+    return [n[0] for n in numbers if is_part_number(n, matrix)]
 
 
 def find_gears(matrix):
@@ -37,22 +31,22 @@ def build_gear_matrix(matrix):
     # init gear matrix with empty lists for part numbers in place of each "gear"
     gear_matrix = [[[] if x=='*' else None for x in r] for r in matrix]
 
-    # populate gear matrix with part numbers
+    # populate gears with adjacent part numbers
     numbers = find_numbers(matrix)
-    for n, start, end, i in numbers:
-        gears = [c for c in list_adj_cells((start, end, i), gear_matrix) if c is not None]
+    for n in numbers:
+        gears = [c for c in list_adj_cells(n, gear_matrix) if c is not None]
         for gear in gears:
-            gear.append(n)
+            gear.append(n[0])
 
     return gear_matrix
 
 def list_adj_cells(n_rec, matrix):
-    cells = []
-    start, end, i = n_rec
+    _, start, end, i = n_rec
     has_prev_row = i > 0
     has_next_row = i < len(matrix) - 1
     has_prev_col = start > 0
     has_next_col = len(matrix[i]) > end
+    cells = []
 
     # above
     if has_prev_row:
@@ -91,7 +85,7 @@ def is_symbol(c):
     return (not c.isalnum() and c != '.')
 
 def answers():
-    input_lines = [l.strip() for l in open('input.txt').readlines()]
+    input_lines = (l.strip() for l in open('input.txt').readlines())
     matrix = parse_matrix(input_lines)
     print('part numbers sum:', sum_part_numbers(matrix))
     print('gears sum:', sum_gears(matrix))
