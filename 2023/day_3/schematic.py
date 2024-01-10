@@ -31,24 +31,18 @@ def find_gears(matrix):
 
 def sum_gears(matrix):
     gears = find_gears(matrix)
-    return sum([g[0] * g[1] for g in gears])
+    return sum([g[0] * g[1] for g in gears if len(g)==2])
 
 def build_gear_matrix(matrix):
     # init gear matrix with empty lists for part numbers in place of each "gear"
-    gear_matrix = [] 
-    for r in matrix:
-        row = []
-        for c in r:
-            row.append([] if c=='*' else None)
-        gear_matrix.append(row)
+    gear_matrix = [[[] if x=='*' else None for x in r] for r in matrix]
 
     # populate gear matrix with part numbers
     numbers = find_numbers(matrix)
     for n, start, end, i in numbers:
-        cells = list_adj_cells((start, end, i), gear_matrix)
-        for cell in cells:
-            if cell is not None:
-                cell.append(n)
+        gears = [c for c in list_adj_cells((start, end, i), gear_matrix) if c is not None]
+        for gear in gears:
+            gear.append(n)
 
     return gear_matrix
 
