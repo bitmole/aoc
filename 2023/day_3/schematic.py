@@ -23,13 +23,11 @@ def filter_part_numbers(matrix):
 
 
 def find_gears(matrix):
-    gear_list = []
     gear_matrix = build_gear_matrix(matrix)
-    for r in gear_matrix:
-        for c in r:
-            if c is not None and len(c)==2:
-                gear_list.append(c)
-    return gear_list
+    # filter only valid gears with exactly 2 elements
+    return [e for r in gear_matrix
+              for e in r
+              if e is not None and len(e)==2]
 
 def sum_gears(matrix):
     gears = find_gears(matrix)
@@ -38,9 +36,9 @@ def sum_gears(matrix):
 def build_gear_matrix(matrix):
     # init gear matrix with empty lists for part numbers in place of each "gear"
     gear_matrix = [] 
-    for i, r in enumerate(matrix):
+    for r in matrix:
         row = []
-        for j, c in enumerate(r):
+        for c in r:
             row.append([] if c=='*' else None)
         gear_matrix.append(row)
 
@@ -135,5 +133,4 @@ class KnownValues(unittest.TestCase):
         self.assertEqual(sum_gears(self.matrix), 467835)
         
 if __name__ == "__main__":
-    pass
-    # unittest.main()
+    unittest.main()
