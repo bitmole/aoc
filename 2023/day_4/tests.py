@@ -10,12 +10,26 @@ class KnownValues(unittest.TestCase):
     Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
     Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
     '''
-    test_cards = (line.strip() for line in test_cards.splitlines() if line.strip()) 
+    test_cards = [line.strip() for line in test_cards.splitlines() if line.strip()]
 
     def test_card_worth(self):
-        expected_values = [8,2,2,1,0,0]
+        expected = [8,2,2,1,0,0]
         for c in self.test_cards:
-            self.assertEqual(sc.card_worth(c), expected_values.pop(0))
+            self.assertEqual(sc.card_worth(c), expected.pop(0))
+
+    def test_sum_card_pile(self):
+        self.assertEqual(sc.sum_cards(self.test_cards), 13)
+
+    def test_is_winning(self):
+        expected = [(True, 4), (True, 2), (True, 2), (True, 1), (False, 0), (False, 0)]
+        for card in self.test_cards:
+            self.assertEqual(sc.is_winning(card), expected.pop(0))
+
+    def test_process_all_losing_cards(self):
+        cards = [ (False, 0), (False, 0), (False, 0), (False, 0), (False, 0) ]
+        # should end up with the number of original cards as they win no copies
+        self.assertEqual(sc.process(cards), len(cards))
+        
 
 if __name__ == "__main__":
     unittest.main()
