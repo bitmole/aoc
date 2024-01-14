@@ -26,9 +26,20 @@ def get_winning_copies(card, orig):
 def map_won_copies(orig):
     return {c:get_winning_copies(c, orig) for c in orig}
 
-def process(cards):
+def process_iter(cards):
+    copies = map_won_copies(cards)
+    won = 0
+
+    for c in cards:
+        won += 1
+        cards += copies[c]
+
+    return won
+
+def process_recur(cards):
     copies = map_won_copies(cards)
 
+    # tests green, but exceeds max recursion depth
     def sum_cards(cards):
         if not cards:
             return 0
@@ -40,7 +51,7 @@ def process(cards):
 def answers():
     cards = [line.strip() for line in open('input.txt').readlines()]
     print('total worth: ', sum_cards(cards))
-    print('total cards: ', process(cards))
+    print('total cards: ', process_iter(cards))
 
 if __name__ == "__main__":
     answers()

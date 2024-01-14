@@ -28,10 +28,12 @@ class KnownValues(unittest.TestCase):
     def test_process_all_losing_cards(self):
         losing_cards = [c for c in self.test_cards if not sc.n_winning_copies(c) > 0]
         # should end up with the number of original cards even if they win no copies
-        self.assertEqual(sc.process(losing_cards), len(losing_cards))
+        self.assertEqual(sc.process_recur(losing_cards), len(losing_cards))
+        self.assertEqual(sc.process_iter(losing_cards), len(losing_cards))
 
     def test_sum_won_cards(self):
-        self.assertEqual(sc.process(self.test_cards), 30)
+        self.assertEqual(sc.process_recur(self.test_cards), 30)
+        self.assertEqual(sc.process_iter(self.test_cards), 30)
 
     def test_get_winning_copies(self):
         expected = [
