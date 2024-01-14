@@ -28,13 +28,11 @@ def map_won_copies(orig):
 
 def process_iter(cards):
     copies = map_won_copies(cards)
-    won = 0
 
     for c in cards:
-        won += 1
         cards += copies[c]
 
-    return won
+    return len(cards)
 
 def process_recur(cards):
     copies = map_won_copies(cards)
