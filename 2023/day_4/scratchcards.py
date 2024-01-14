@@ -1,37 +1,42 @@
 import re
 
 def card_worth(card):
-    winning, nmatches = is_winning(card)
-    if winning: 
-        return pow(2, nmatches - 1)
+    ncopies = n_winning_copies(card)
+    if ncopies: 
+        return pow(2, ncopies - 1)
     else: 
         return 0
 
 def sum_cards(cards):
     return sum(card_worth(c) for c in cards)
 
-def is_winning(card):
+def n_winning_copies(card):
     winning, hand = card.split('|')
     winning = re.findall('\d+', winning)[1:] # throw away card number
     hand = re.findall('\d+', hand)
     winning_in_hand = set(winning).intersection(set(hand))
-    nmatches = len(winning_in_hand)
-    return nmatches > 0, nmatches
+    return len(winning_in_hand)
+
+def get_winning_copies(card, orig):
+    s = orig.index(card) + 1
+    e = s + n_winning_copies(card)
+    return orig[s:e]
 
 def process(cards):
-    if not cards:
-        return 0
-    wins, nmatches = cards[0]
-    if not wins:
-        return 1 + process(cards[1:])
-    else:
-        #TODO: process next nmatches cards
-        return 0
+    orig = cards
 
+    def sum_cards(cards):
+        if not cards:
+            return 0
+        first, rest = cards[0], cards[1:]
+        return 1 + sum_cards(rest + get_winning_copies(first, orig))
+
+    return sum_cards(cards)
 
 def answers():
-    cards = (line.strip() for line in open('input.txt').readlines())
+    cards = [line.strip() for line in open('input.txt').readlines()]
     print('total worth: ', sum_cards(cards))
+    print('total cards: ', process(cards))
 
 if __name__ == "__main__":
     answers()

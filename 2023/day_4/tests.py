@@ -21,15 +21,17 @@ class KnownValues(unittest.TestCase):
         self.assertEqual(sc.sum_cards(self.test_cards), 13)
 
     def test_is_winning(self):
-        expected = [(True, 4), (True, 2), (True, 2), (True, 1), (False, 0), (False, 0)]
+        expected = [4, 2, 2, 1, 0, 0]
         for card in self.test_cards:
-            self.assertEqual(sc.is_winning(card), expected.pop(0))
+            self.assertEqual(sc.n_winning_copies(card), expected.pop(0))
 
     def test_process_all_losing_cards(self):
-        cards = [ (False, 0), (False, 0), (False, 0), (False, 0), (False, 0) ]
-        # should end up with the number of original cards as they win no copies
-        self.assertEqual(sc.process(cards), len(cards))
-        
+        losing_cards = [c for c in self.test_cards if not sc.n_winning_copies(c) > 0]
+        # should end up with the number of original cards even if they win no copies
+        self.assertEqual(sc.process(losing_cards), len(losing_cards))
+
+    def test_sum_won_cards(self):
+        self.assertEqual(sc.process(self.test_cards), 30)
 
 if __name__ == "__main__":
     unittest.main()
