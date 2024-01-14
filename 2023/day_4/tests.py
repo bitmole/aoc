@@ -33,5 +33,24 @@ class KnownValues(unittest.TestCase):
     def test_sum_won_cards(self):
         self.assertEqual(sc.process(self.test_cards), 30)
 
+    def test_get_winning_copies(self):
+        expected = [
+                (0, [1,2,3,4]),
+                (1, [2,3]),
+                (2, [3,4]),
+                (3, [4]),
+                (4, []),
+                (5, [])
+                ]
+
+        for i, copies in expected:
+            self.assertEqual(sc.get_winning_copies(self.test_cards[i], self.test_cards), 
+                             [self.test_cards[i] for i in copies])
+
+    def test_map_won_copies(self):
+        map = sc.map_won_copies(self.test_cards)
+        for c in self.test_cards:
+            self.assertEqual(map[c], sc.get_winning_copies(c, self.test_cards))
+
 if __name__ == "__main__":
     unittest.main()

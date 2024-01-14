@@ -1,3 +1,5 @@
+# https://adventofcode.com/2023/day/4
+
 import re
 
 def card_worth(card):
@@ -7,8 +9,7 @@ def card_worth(card):
     else: 
         return 0
 
-def sum_cards(cards):
-    return sum(card_worth(c) for c in cards)
+def sum_cards(cards): return sum(card_worth(c) for c in cards)
 
 def n_winning_copies(card):
     winning, hand = card.split('|')
@@ -22,14 +23,17 @@ def get_winning_copies(card, orig):
     e = s + n_winning_copies(card)
     return orig[s:e]
 
+def map_won_copies(orig):
+    return {c:get_winning_copies(c, orig) for c in orig}
+
 def process(cards):
-    orig = cards
+    copies = map_won_copies(cards)
 
     def sum_cards(cards):
         if not cards:
             return 0
         first, rest = cards[0], cards[1:]
-        return 1 + sum_cards(rest + get_winning_copies(first, orig))
+        return 1 + sum_cards(rest + copies[first])
 
     return sum_cards(cards)
 
