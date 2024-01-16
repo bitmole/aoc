@@ -42,14 +42,15 @@ def process_recur(cards):
         if not cards:
             return 0
         first, rest = cards[0], cards[1:]
-        return 1 + sum_cards(rest + copies[first])
+        return 1 + sum_cards(rest) + sum_cards(copies[first])
 
     return sum_cards(cards)
 
 def answers():
     cards = [line.strip() for line in open('input.txt').readlines()]
     print('total worth: ', sum_cards(cards))
-    print('total cards: ', process_iter(cards))
+    print('total cards (recur): ', process_recur(cards))
+    print('total cards (iter): ', process_iter(cards))
 
 if __name__ == "__main__":
     answers()
