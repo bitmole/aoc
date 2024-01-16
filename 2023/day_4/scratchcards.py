@@ -37,7 +37,6 @@ def process_iter(cards):
 def process_recur(cards):
     copies = map_won_copies(cards)
 
-    # tests green, but exceeds max recursion depth
     def sum_cards(cards):
         if not cards:
             return 0
