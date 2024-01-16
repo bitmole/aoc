@@ -13,9 +13,9 @@ def sum_cards(cards): return sum(card_worth(c) for c in cards)
 
 def n_winning_copies(card):
     winning, hand = card.split('|')
-    winning = re.findall('\d+', winning)[1:] # throw away card number
+    _, *winning = re.findall('\d+', winning) # throw away card number
     hand = re.findall('\d+', hand)
-    winning_in_hand = set(winning).intersection(set(hand))
+    winning_in_hand = set(winning) & set(hand) # intersection 
     return len(winning_in_hand)
 
 def get_winning_copies(card, orig):
