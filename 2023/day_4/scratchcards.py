@@ -37,13 +37,13 @@ def process_iter(cards):
 def process_recur(cards):
     copies = map_won_copies(cards)
 
-    def sum_cards(cards):
+    def sum_cards(cards, a):
         if not cards:
-            return 0
+            return a
         first, rest = cards[0], cards[1:]
-        return 1 + sum_cards(rest) + sum_cards(copies[first])
+        return sum_cards(rest, a+1) + sum_cards(copies[first], 0)
 
-    return sum_cards(cards)
+    return sum_cards(cards, 0)
 
 def answers():
     cards = [line.strip() for line in open('input.txt').readlines()]
